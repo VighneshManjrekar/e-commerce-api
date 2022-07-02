@@ -7,12 +7,8 @@ const express = require("express");
 // Import DB
 const connectDB = require("./configs/db");
 
-// Import erro handler
-const errorHandler = require("./middleware/error");
-
-// Import Routes
-const product = require("./routes/product");
-const admin = require("./routes/admin");
+// Import error handler
+const errorHandler = require("./middlewares/error");
 
 const PORT = process.env.PORT || 7000;
 
@@ -21,9 +17,15 @@ const app = express();
 // Parse json
 app.use(express.json());
 
+// Import Routes
+const product = require("./routes/product");
+const admin = require("./routes/admin");
+const auth = require("./routes/auth");
+
 // Mount routers
 app.use("/api/v1/products", product);
 app.use("/api/v1/admin/products", admin);
+app.use("/api/v1/auth", auth);
 app.use(errorHandler);
 
 // Create server

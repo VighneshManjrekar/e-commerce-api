@@ -1,7 +1,6 @@
 const ErrorResponse = require("../utils/errorResponse");
 
 const errorHandler = (err, req, res, next) => {
-  console.log(process.env.NODE_ENV);
   if (process.env.NODE_ENV == "development") {
     console.log(err);
   }
@@ -31,7 +30,7 @@ const errorHandler = (err, req, res, next) => {
     console.log(error.message);
     new ErrorResponse(error.message, error.status);
   }
-  
+
   res
     .status(error.status || 500)
     .json({ success: false, error: error.message || "Internal Server Error" });
