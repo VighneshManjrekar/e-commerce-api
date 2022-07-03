@@ -15,7 +15,13 @@ exports.protect = asyncHandler(async (req, res, next) => {
   }
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  req.user = await User.findById(decoded.id);
+  let user = await User.findById(decoded.id);
+  if (user.resetPasswordDate > new Date(Date.now())) {
+    user.resetPasswordDate = undefined;
+    user.resetPasswordToken = undefined;
+    user = await user.save();
+  }
+  req.user = user;
   next();
 });
 

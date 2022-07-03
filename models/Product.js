@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const ProductSchema = mongoose.Schema({
+const ProductSchema = new mongoose.Schema({
   title: {
     type: String,
     unique: [true, "Title already exsitst"],
@@ -22,7 +22,7 @@ const ProductSchema = mongoose.Schema({
     enum: ["InStock", "OutOfStock"],
     default: "InStock",
   },
-  rating: {
+  averageRating: {
     type: Number,
     min: [1, "Rating must be between 1-5"],
     max: [5, "Rating must be between 1-5"],
@@ -40,6 +40,11 @@ const ProductSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+});
+
+ProductSchema.pre("remove", async function (next) {
+  await this.model("Review").deleteMany({ product: this._id });
+  next();
 });
 
 module.exports = mongoose.model("Product", ProductSchema);

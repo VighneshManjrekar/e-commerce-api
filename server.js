@@ -23,12 +23,14 @@ const product = require("./routes/product");
 const admin = require("./routes/admin");
 const auth = require("./routes/auth");
 const user = require("./routes/user");
+const review = require("./routes/review");
 
 // Mount routers
 app.use("/api/v1/products", product);
 app.use("/api/v1/admin", admin);
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/users", user);
+app.use("/api/v1/reviews", review);
 app.use(errorHandler);
 
 // Create server

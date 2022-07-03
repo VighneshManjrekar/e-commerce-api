@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const UserSchema = mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please enter name"],
@@ -35,6 +35,10 @@ const UserSchema = mongoose.Schema({
       },
     ],
   },
+  profile: {
+    type: String,
+    default: "profile.jpg",
+  },
   resetPasswordToken: String,
   resetPasswordDate: Date,
   createdAt: {
@@ -54,6 +58,11 @@ UserSchema.pre("findOneAndUpdate", async function (next) {
   if (this._update.password) {
     this._update.password = await bcrypt.hash(this._update.password, 10);
   }
+  next();
+});
+
+UserSchema.pre("remove", async function (next) {
+  await this.model("Review").deleteMany({ product: this._id });
   next();
 });
 
@@ -98,7 +107,7 @@ UserSchema.methods.createHashToken = function () {
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
-  this.resetPasswordDate = Date.now() + 1 * 60 * 60 * 1000;
+  this.resetPasswordDate = Date.now() + 10 * 60 * 60 * 1000;
   return resetToken;
 };
 
