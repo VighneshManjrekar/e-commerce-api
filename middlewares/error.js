@@ -17,7 +17,8 @@ const errorHandler = (err, req, res, next) => {
 
   // Duplicate field error
   if (error.code == 11000) {
-    error.message = "Duplicate field value entered";
+    const field = Object.keys(error.keyPattern);
+    error.message = `${[field]} already exists`;
     error.status = 400;
     new ErrorResponse(error.message, error.status);
   }
@@ -28,6 +29,13 @@ const errorHandler = (err, req, res, next) => {
     error.message = errors;
     error.status = 400;
     console.log(error.message);
+    new ErrorResponse(error.message, error.status);
+  }
+
+  // json-web-token error
+  if (error.name == "JsonWebTokenError" && error.message == "jwt malformed") {
+    error.message = "Invalid token";
+    error.status = 400;
     new ErrorResponse(error.message, error.status);
   }
 

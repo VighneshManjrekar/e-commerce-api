@@ -2,10 +2,7 @@ const router = require("express").Router();
 
 const {
   getProducts,
-  getProduct,
-  createProduct,
-  updateProduct,
-  deleteProduct,
+  getProduct
 } = require("../controllers/product");
 
 router.route("/").get(getProducts);
