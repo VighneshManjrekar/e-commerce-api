@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -88,6 +89,17 @@ UserSchema.methods.removeCartItem = async function (prodId) {
   );
   this.cart.items = updatedCart;
   await this.save();
+};
+
+UserSchema.methods.createHashToken = function () {
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.resetPasswordDate = Date.now() + 1 * 60 * 60 * 1000;
+  return resetToken;
 };
 
 module.exports = mongoose.model("User", UserSchema);

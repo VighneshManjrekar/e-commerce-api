@@ -36,14 +36,6 @@ exports.removeFromCart = asyncHandler(async (req, res, next) => {
       new ErrorResponse(`Product ${req.params.id} not found in cart.`, 404)
     );
   }
-
-  console.log("before", req.user.cart);
-
   await req.user.removeCartItem(req.params.id);
-
-  console.log("after", req.user.cart);
-
-  // const user = await req.user.removeCartItem(product);
-
   res.status(200).json({ success: true, data: req.user });
 });
