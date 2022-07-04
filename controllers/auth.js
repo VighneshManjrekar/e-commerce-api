@@ -77,7 +77,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
   const resetUrl = `${req.protocol}://${req.get(
     "host"
-  )}/auth/reset-password/${resetToken}`;
+  )}/api/v1/auth/reset-password/${resetToken}`;
   const text = `
   Hi ${user.name},
   You recently requested to reset the password for your DevCamper account. Follow this link to proceed:
@@ -90,7 +90,6 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     subject: "Reset password",
     text,
   };
-
   // send mail
   try {
     await sendResetToken(options);

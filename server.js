@@ -1,6 +1,8 @@
 require("dotenv").config({ path: "./configs/.env" });
 require("colors");
 
+// Inbuilt packages
+const path = require("path");
 // Packages
 const express = require("express");
 const cookieParser = require("cookie-parser");
@@ -17,6 +19,8 @@ const app = express();
 app.use(express.json());
 // Parse cookies
 app.use(cookieParser());
+// static
+app.use(express.static(path.join(__dirname, "public")));
 
 // Import Routes
 const product = require("./routes/product");

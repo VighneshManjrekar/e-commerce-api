@@ -1,21 +1,21 @@
 const nodemailer = require("nodemailer");
-const sendGrid = require("nodemailer-sendgrid-transport");
+const sgMail = require("@sendgrid/mail");
 
 const sendResetToken = async (options) => {
   const { to, subject, text } = options;
-  let transporter;
+  const message = {
+    from: `${process.env.SMTP_FROM_NAME} <${process.env.SMTP_FROM_EMAIL}>`,
+    to,
+    subject,
+    text,
+  };
   if (process.env.NODE_ENV == "production") {
     // for production use sendgrid
-    transporter = nodemailer.createTransport(
-      sendGrid({
-        auth: {
-          api_key: process.env.SENDGRID_PASS,
-        },
-      })
-    );
+    sgMail.setApiKey(process.env.SENDGRID_PASS);
+    await sgMail.send(message);
   } else {
     // for development use mailtrap
-    transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: process.env.SMTP_PORT,
       auth: {
@@ -23,14 +23,8 @@ const sendResetToken = async (options) => {
         pass: process.env.SMTP_PASS,
       },
     });
+    await transporter.sendMail(message);
   }
-  const message = {
-    from: `${process.env.SMTP_FROM_NAME} <${process.env.SMTP_FROM_EMAIL}>`,
-    to,
-    subject,
-    text,
-  };
-  await transporter.sendMail(message);
 };
 
 module.exports = sendResetToken;
