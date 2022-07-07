@@ -100,6 +100,11 @@ UserSchema.methods.removeCartItem = async function (prodId) {
   await this.save();
 };
 
+UserSchema.methods.clearCartItems = async function () {
+  this.cart.items = [];
+  await this.save();
+};
+
 UserSchema.methods.createHashToken = function () {
   const resetToken = crypto.randomBytes(20).toString("hex");
 
